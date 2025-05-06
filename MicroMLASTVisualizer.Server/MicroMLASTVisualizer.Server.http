@@ -1,0 +1,6 @@
+@MicroMLASTVisualizer.Server_HostAddress = http://localhost:5179
+
+GET {{MicroMLASTVisualizer.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

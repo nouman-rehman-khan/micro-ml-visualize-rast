@@ -1,0 +1,45 @@
+﻿/* Custom styles for the overall application */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  color: #2c3e50;
+  margin-bottom: 15px;
+}
+
+h2 {
+  color: #3498db;
+  margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  color: #34495e;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+p {
+  margin-bottom: 15px;
+  line-height: 1.5;
+}
+
+a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+  a:hover {
+    text-decoration: underline;
+  }
