@@ -274,6 +274,138 @@ namespace MicroMLASTVisualizer.Models
             return ParseComparisonExpression();
         }
 
-        
+        private ASTNode ParseComparisonExpression()
+        {
+            ASTNode left = ParseAdditiveExpression();
+
+            while (CurrentToken()?.Type == "OPERATOR" &&
+                   (CurrentToken().Value == "==" || CurrentToken().Value == "!=" ||
+                    CurrentToken().Value == "<" || CurrentToken().Value == ">" ||
+                    CurrentToken().Value == "<=" || CurrentToken().Value == ">="))
+            {
+                string op = CurrentToken().Value;
+                Advance(); // Consume operator
+
+                ASTNode right = ParseAdditiveExpression();
+
+                left = new BinaryOpNode(op, left, right);
+            }
+
+            return left;
+        }
+
+        private ASTNode ParseAdditiveExpression()
+        {
+            ASTNode left = ParseMultiplicativeExpression();
+
+            while (CurrentToken()?.Type == "OPERATOR" && (CurrentToken().Value == "+" || CurrentToken().Value == "-"))
+            {
+                string op = CurrentToken().Value;
+                Advance(); // Consume operator
+
+                ASTNode right = ParseMultiplicativeExpression();
+
+                left = new BinaryOpNode(op, left, right);
+            }
+
+            return left;
+        }
+
+        private ASTNode ParseMultiplicativeExpression()
+        {
+            ASTNode left = ParseFunctionDefinition();
+
+            while (CurrentToken()?.Type == "OPERATOR" && (CurrentToken().Value == "*" || CurrentToken().Value == "/"))
+            {
+                string op = CurrentToken().Value;
+                Advance(); // Consume operator
+
+                ASTNode right = ParseFunctionDefinition();
+
+                left = new BinaryOpNode(op, left, right);
+            }
+
+            return left;
+        }
+
+        private ASTNode ParseFunctionDefinition()
+        {
+            if (CurrentToken()?.Type == "LAMBDA")
+            {
+                Advance(); // Consume 'lambda' or 'fun'
+
+                if (CurrentToken()?.Type != "IDENTIFIER")
+                    throw new Exception("Expected parameter name after lambda");
+
+                string paramName = CurrentToken().Value;
+                Advance(); // Consume parameter name
+
+                if (CurrentToken()?.Type != "ARROW")
+                    throw new Exception("Expected '->' after parameter name in lambda");
+
+                Advance(); // Consume '->'
+
+                ASTNode body = ParseExpression();
+
+                return new FunctionNode(paramName, body);
+            }
+
+            return ParseApplicationExpression();
+        }
+
+        private ASTNode ParseApplicationExpression()
+        {
+            ASTNode expr = ParsePrimaryExpression();
+
+            while (_position < _tokens.Count &&
+                   CurrentToken()?.Type != "RPAREN" &&
+                   CurrentToken()?.Type != "IN" &&
+                   CurrentToken()?.Type != "THEN" &&
+                   CurrentToken()?.Type != "ELSE" &&
+                   CurrentToken()?.Type != "OPERATOR" &&
+                   CurrentToken()?.Type != "SEMICOLON")
+            {
+                ASTNode arg = ParsePrimaryExpression();
+                expr = new ApplicationNode(expr, arg);
+            }
+
+            return expr;
+        }
+
+        private ASTNode ParsePrimaryExpression()
+        {
+            Token token = CurrentToken();
+
+            if (token == null)
+                throw new Exception("Unexpected end of input");
+
+            if (token.Type == "NUMBER")
+            {
+                Advance(); // Consume number
+                return new NumberNode(double.Parse(token.Value));
+            }
+
+            if (token.Type == "IDENTIFIER")
+            {
+                Advance(); // Consume identifier
+                return new VariableNode(token.Value);
+            }
+
+            if (token.Type == "LPAREN")
+            {
+                Advance(); // Consume '('
+
+                ASTNode expr = ParseExpression();
+
+                if (CurrentToken()?.Type != "RPAREN")
+                    throw new Exception("Expected closing parenthesis");
+
+                Advance(); // Consume ')'
+
+                return expr;
+            }
+
+            throw new Exception($"Unexpected token: {token.Value}");
+        }
     }
 }
