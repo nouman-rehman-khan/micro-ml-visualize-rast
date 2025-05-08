@@ -18,6 +18,12 @@ This project is an implementation of a simple web application that can parse Mic
   - If-then-else expressions
 - Visual representation of the AST
 
+## Screenshots
+
+# Screenshot 1
+![image](https://github.com/user-attachments/assets/181b2d0c-77b0-453e-938e-3818ce134d7c)
+
+
 ## Technology Stack
 
 - ASP.NET Core for the backend
