@@ -23,6 +23,10 @@ This project is an implementation of a simple web application that can parse Mic
 # Screenshot 1
 ![image](https://github.com/user-attachments/assets/181b2d0c-77b0-453e-938e-3818ce134d7c)
 
+# Screenshot 2
+![image](https://github.com/user-attachments/assets/7c1f324b-5129-4333-8b9c-bf6b78884111)
+
+
 
 ## Technology Stack
 
